@@ -1,0 +1,66 @@
+generator client {
+  provider = "prisma-client"
+   output   = "../generated"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Quiz {
+  id        String   @id @default(uuid())
+  title     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  questions Question[]
+  sessions  GameSession[]
+}
+
+model Question {
+  id        String   @id @default(uuid())
+  text      String
+  points    Int      @default(100)
+  timeLimit Int      @default(20)
+  createdAt DateTime @default(now())
+
+  quizId String
+  quiz   Quiz   @relation(fields: [quizId], references: [id], onDelete: Cascade)
+
+  answers Answer[]
+}
+
+model Answer {
+  id        String  @id @default(uuid())
+  text      String
+  isCorrect Boolean @default(false)
+
+  questionId String
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+}
+
+model GameSession {
+  id             String    @id @default(uuid())
+  pin            String    @unique
+  status         String    @default("waiting")
+  currentIndex   Int       @default(0)
+  startedAt      DateTime?
+  endedAt        DateTime?
+  createdAt      DateTime  @default(now())
+
+  quizId String
+  quiz   Quiz   @relation(fields: [quizId], references: [id])
+
+  players Player[]
+}
+
+model Player {
+  id       String   @id @default(uuid())
+  username String
+  score    Int      @default(0)
+  answered Boolean  @default(false)
+  joinedAt DateTime @default(now())
+
+  sessionId String
+  session   GameSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+}
