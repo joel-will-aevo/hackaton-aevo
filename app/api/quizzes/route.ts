@@ -53,7 +53,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ id: quiz.id, quiz });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json({ error: error.errors }, { status: 400 });
+      return NextResponse.json({ error: error.message }, { status: 400 });
     }
     console.error("Error creating quiz:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
