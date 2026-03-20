@@ -6,6 +6,6 @@ export async function GET() {
     const count = await prisma.quiz.count();
     return NextResponse.json({ count });
   } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

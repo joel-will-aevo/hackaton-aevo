@@ -54,7 +54,7 @@ export default function CreateQuiz() {
 
   const updateQuestion = (index: number, field: keyof Question, value: string | number) => {
     const updated = [...questions];
-    (updated[index] as Record<string, string | number>)[field] = value;
+    updated[index] = { ...updated[index], [field]: value };
     setQuestions(updated);
   };
 
